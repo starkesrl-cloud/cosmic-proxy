@@ -12,14 +12,27 @@ export default async function handler(req, res) {
   const url = `https://www.cosmicgroup.eu/api/v1/${path}${queryString ? '?' + queryString : ''}`;
 
   try {
-    const response = await fetch(url, {
+    const fetchOptions = {
+      method: req.method,
       headers: {
         'Authorization': req.headers.authorization || '',
         'Content-Type': 'application/json',
       },
-    });
-    const data = await response.json();
-    res.status(response.status).json(data);
+    };
+
+    if (req.method === 'POST' && req.body) {
+      fetchOptions.body = JSON.stringify(req.body);
+    }
+
+    const response = await fetch(url, fetchOptions);
+    const text = await response.text();
+    
+    try {
+      const data = JSON.parse(text);
+      res.status(response.status).json(data);
+    } catch {
+      res.status(response.status).send(text);
+    }
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
