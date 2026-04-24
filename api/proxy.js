@@ -29,7 +29,11 @@ export default async function handler(req, res) {
     
     try {
       const data = JSON.parse(text);
-      res.status(response.status).json(data);
+if (data && data.objects) {
+  data.objects = data.objects.filter(p => parseInt(p.qt_stock, 10) !== 1);
+}
+res.status(response.status).json(data);
+
     } catch {
       res.status(response.status).send(text);
     }
