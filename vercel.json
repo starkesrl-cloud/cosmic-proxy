@@ -1,11 +1,9 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "API/proxy.js",
-      "use": "@vercel/node"
+  "functions": {
+    "api/proxy.js": {
+      "runtime": "nodejs20.x"
     }
-  ]
+  }
 }
 
 
